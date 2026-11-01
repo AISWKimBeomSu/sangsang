@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>상상놀이터 — 아이가 AI에게 시키고, 확인하고, 고칩니다</title>
+<meta name="description" content="7세~초등 3학년을 위한 하루 15분 유아 AI 리터러시 수업. AI 튜터 '뭉게'는 대신 만들어 주지 않고, 아이가 말한 것만 그리고 빠진 것을 되묻습니다.">
+<meta property="og:title" content="상상놀이터 — 유아 AI 리터러시 수업">
+<meta property="og:description" content="아이가 자기 말로 AI에게 시키고, 결과를 확인하고, 틀린 곳을 고칩니다. 하루 15분, AI 튜터 '뭉게'.">
+<meta property="og:image" content="https://aiswkimbeomsu.github.io/sangsang/assets/og.png">
+<meta property="og:url" content="https://aiswkimbeomsu.github.io/sangsang/">
+<meta property="og:type" content="website">
+<link rel="icon" href="assets/favicon.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  :root {
+    --ink: #1E2140; --body: #3A3F5C; --muted: #6B7090; --line: #E4E6F0;
+    --purple: #5A4BE7; --lav: #F1F0FE; --lav2: #EEF0FF; --bg: #F8F8FC;
+    --green: #12A594; --mint: #E2F6F2; --pink: #F06595; --rose: #FFF0F5;
+    --amber: #B7791F; --sun: #FFF5D1;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--body); font-family: "Pretendard Variable", Pretendard, "Apple SD Gothic Neo", system-ui, sans-serif; line-height: 1.6; word-break: keep-all; }
+  img, video { max-width: 100%; height: auto; display: block; }
+  a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+  header.nav { position: sticky; top: 0; z-index: 10; background: rgba(248,248,252,.88); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  header.nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .brand { display: flex; align-items: center; gap: 8px; font-weight: 800; color: var(--ink); text-decoration: none; font-size: 18px; }
+  .brand img { width: 32px; height: 32px; }
+  nav.links { display: flex; gap: 22px; font-size: 14px; font-weight: 600; }
+  nav.links a { text-decoration: none; color: var(--muted); }
+  nav.links a:hover { color: var(--purple); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 13px 22px; border-radius: 999px; font-weight: 700; font-size: 15px; text-decoration: none; border: 0; cursor: pointer; }
+  .btn.primary { background: var(--purple); color: #fff; }
+  .btn.primary:hover { background: #4A3BD6; }
+  .btn.ghost { background: #fff; color: var(--purple); box-shadow: inset 0 0 0 1.5px #D9D4FF; }
+  .btn.small { padding: 8px 16px; font-size: 13px; }
+  .btn[aria-disabled="true"] { background: #B9B3F3; pointer-events: none; }
+
+  section { padding: 84px 0; }
+  .kicker { display: inline-block; background: var(--lav2); color: var(--purple); font-weight: 700; font-size: 13px; padding: 6px 14px; border-radius: 999px; margin-bottom: 14px; }
+  h1, h2, h3 { color: var(--ink); margin: 0; line-height: 1.3; }
+  h1 { font-size: clamp(34px, 5.2vw, 56px); font-weight: 800; letter-spacing: -0.02em; }
+  h2 { font-size: clamp(26px, 3.4vw, 36px); font-weight: 800; letter-spacing: -0.01em; }
+  h3 { font-size: 20px; font-weight: 700; }
+  .lead { font-size: 18px; color: var(--body); max-width: 640px; margin: 18px 0 0; }
+  .sub { color: var(--muted); font-size: 16px; max-width: 680px; margin: 12px 0 0; }
+
+  /* 히어로 */
+  .hero { padding: 64px 0 72px; overflow: hidden; }
+  .hero .grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; }
+  .hero .cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+  .hero .note { margin-top: 14px; font-size: 14px; color: var(--muted); }
+  .pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 22px; }
+  .pill { background: #fff; border: 1px solid var(--line); color: var(--purple); font-weight: 700; font-size: 13px; padding: 6px 14px; border-radius: 999px; }
+  .device { position: relative; background: #1E2140; padding: 10px; border-radius: 26px; box-shadow: 0 24px 60px rgba(30,33,64,.18); }
+  .device img { border-radius: 18px; }
+  .hero .mungge { position: absolute; width: 150px; left: -54px; bottom: -48px; filter: drop-shadow(0 12px 18px rgba(30,33,64,.18)); }
+
+  /* 문제 */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 36px; }
+  .stat { background: #fff; border-radius: 20px; padding: 24px; border: 1px solid var(--line); }
+  .stat b { display: block; font-size: 34px; font-weight: 800; color: var(--purple); line-height: 1.1; }
+  .stat span { display: block; margin-top: 8px; font-size: 15px; color: var(--body); }
+  .stat small { display: block; margin-top: 10px; font-size: 12px; color: var(--muted); }
+  .stat:nth-child(2) b { color: var(--pink); }
+  .stat:nth-child(3) b { color: var(--green); }
+  .stat:nth-child(4) b { color: var(--amber); }
+
+  /* 수업 */
+  .lessons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 36px; }
+  .lesson { background: #fff; border-radius: 22px; overflow: hidden; border: 1px solid var(--line); display: flex; flex-direction: column; }
+  .lesson img { aspect-ratio: 1280 / 889; object-fit: cover; }
+  .lesson .body { padding: 22px 22px 24px; }
+  .tag { display: inline-block; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; margin-bottom: 10px; }
+  .t-purple { background: var(--lav); color: var(--purple); }
+  .t-pink { background: var(--rose); color: var(--pink); }
+  .t-green { background: var(--mint); color: var(--green); }
+  .t-amber { background: var(--sun); color: var(--amber); }
+  .lesson p { margin: 10px 0 0; font-size: 15px; }
+  .steps { margin: 14px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+  .steps li { font-size: 12.5px; background: var(--bg); border-radius: 8px; padding: 4px 9px; color: var(--muted); font-weight: 600; }
+  .skills { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; }
+  .skill { border-radius: 16px; padding: 16px 18px; }
+  .skill b { color: var(--ink); font-size: 16px; }
+  .skill span { display: block; font-size: 13.5px; color: var(--body); margin-top: 4px; }
+
+  /* 흐름·리포트 */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+  .flow { list-style: none; padding: 0; margin: 26px 0 0; display: grid; gap: 10px; }
+  .flow li { display: flex; gap: 14px; align-items: center; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 12px 16px; font-weight: 600; color: var(--ink); }
+  .flow li i { font-style: normal; width: 28px; height: 28px; border-radius: 50%; background: var(--purple); color: #fff; display: grid; place-items: center; font-size: 13px; flex: none; }
+  .quote { margin-top: 24px; background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 20px 22px; }
+  .quote .row { display: grid; grid-template-columns: 92px 1fr; gap: 10px; align-items: start; padding: 8px 0; }
+  .quote .row + .row { border-top: 1px dashed var(--line); }
+  .quote em { font-style: normal; font-size: 13px; color: var(--muted); font-weight: 600; }
+  .quote q { color: var(--ink); font-weight: 700; quotes: "“" "”"; }
+  .quote small { display: block; color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+
+  /* 안전 */
+  .safety { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 36px; }
+  .safe { background: #fff; border-radius: 18px; padding: 22px; border: 1px solid var(--line); }
+  .safe h3 { font-size: 17px; }
+  .safe p { margin: 8px 0 0; font-size: 14.5px; }
+  .safe .dot { width: 34px; height: 34px; border-radius: 50%; background: var(--mint); display: grid; place-items: center; margin-bottom: 12px; color: var(--green); font-weight: 800; }
+
+  /* 영상 */
+  .videos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 36px; }
+  .video { background: #fff; border-radius: 18px; overflow: hidden; border: 1px solid var(--line); }
+  .video video { width: 100%; aspect-ratio: 16 / 11; object-fit: cover; background: #1E2140; }
+  .video .cap { padding: 14px 16px 16px; }
+  .video .cap b { color: var(--ink); }
+  .video .cap span { display: block; font-size: 13.5px; color: var(--muted); }
+  .video.wide { grid-column: span 2; }
+
+  /* 팀 */
+  .team { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 36px; }
+  .person { background: #fff; border-radius: 18px; padding: 22px; border: 1px solid var(--line); }
+  .person .role { font-size: 12.5px; font-weight: 700; color: var(--purple); background: var(--lav); border-radius: 999px; padding: 3px 10px; margin-left: 8px; vertical-align: 2px; }
+  .person p { margin: 8px 0 0; font-size: 14.5px; }
+  .backing { margin-top: 18px; background: var(--lav); border-radius: 20px; padding: 24px 26px; display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px; }
+  .backing h3 { font-size: 18px; }
+  .backing ul { margin: 10px 0 0; padding-left: 18px; }
+  .backing li { margin: 4px 0; font-size: 15px; }
+  .award { background: #fff; border-radius: 16px; padding: 18px 20px; align-self: center; }
+  .award b { display: block; color: var(--purple); font-size: 22px; font-weight: 800; }
+
+  /* 베타 */
+  .beta { background: var(--purple); color: #fff; border-radius: 28px; padding: 48px; display: grid; grid-template-columns: 1.3fr 1fr; gap: 32px; align-items: center; position: relative; overflow: hidden; }
+  .beta h2 { color: #fff; }
+  .beta p { color: #E9E6FF; margin: 12px 0 0; }
+  .beta ul { margin: 18px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+  .beta li { background: rgba(255,255,255,.12); border-radius: 12px; padding: 10px 14px; font-weight: 600; }
+  .beta .btn.primary { background: #fff; color: var(--purple); }
+  .beta .side { text-align: center; }
+  .beta .side img { width: 180px; margin: 0 auto 16px; }
+  .beta .side small { display: block; margin-top: 12px; color: #D9D4FF; font-size: 13px; }
+
+  footer { padding: 40px 0 56px; color: var(--muted); font-size: 13.5px; }
+  footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 24px; }
+
+  @media (max-width: 900px) {
+    nav.links { display: none; }
+    section { padding: 64px 0; }
+    .hero .grid, .split, .backing, .beta { grid-template-columns: 1fr; }
+    .hero .mungge { width: 110px; left: -10px; bottom: -40px; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .lessons, .safety, .team, .videos { grid-template-columns: 1fr; }
+    .video.wide { grid-column: auto; }
+    .skills { grid-template-columns: 1fr 1fr; }
+    .beta { padding: 32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="assets/favicon.png" alt="">상상놀이터</a>
+    <nav class="links">
+      <a href="#lessons">수업</a>
+      <a href="#report">보호자 리포트</a>
+      <a href="#safety">안전</a>
+      <a href="#demo">시연 영상</a>
+      <a href="#team">팀</a>
+    </nav>
+    <a class="btn primary small beta-link" href="#beta">베타 신청</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- 히어로 -->
+  <section class="hero">
+    <div class="wrap grid">
+      <div>
+        <span class="kicker">유아 AI 리터러시 수업</span>
+        <h1>아이가 AI에게 시키고,<br>확인하고, 고칩니다</h1>
+        <p class="lead">상상놀이터는 아이가 자기 말로 AI에게 주문하고, 결과를 살피고, 틀린 곳을 고쳐 다시 말하는 하루 15분 수업입니다. AI 튜터 '뭉게'는 대신 만들어 주지 않고, 아이가 말한 것만 그리고 빠진 것을 되묻습니다.</p>
+        <div class="pills"><span class="pill">7세~초등 3학년</span><span class="pill">하루 15분</span><span class="pill">AI 튜터 '뭉게'</span><span class="pill">설치 없이 태블릿·폰</span></div>
+        <div class="cta">
+          <a class="btn primary beta-link" href="#beta">베타 신청하기</a>
+          <a class="btn ghost" href="#demo">시연 영상 보기</a>
+        </div>
+        <p class="note">11월 22일부터 4주 · 7세 자녀 30가정 무료 베타</p>
+      </div>
+      <div class="device">
+        <img src="assets/match-heard.webp" alt="똑같이 만들어 줘 수업 화면: 뭉게가 아이 말에서 알아들은 낱말을 카드로 보여 줍니다" width="1280" height="889">
+        <img class="mungge" src="assets/mungge_happy.webp" alt="" width="640" height="640">
+      </div>
+    </div>
+  </section>
+
+  <!-- 왜 -->
+  <section style="background:#fff">
+    <div class="wrap">
+      <span class="kicker">왜 지금인가</span>
+      <h2>아이들은 AI를 배우기 전에 먼저 쓰고 있습니다</h2>
+      <p class="sub">범용 AI는 만 13세 이상을 위해 만들어졌고, 유아용 AI 상품은 대부분 AI가 대신 만들어 줍니다. 아이가 직접 AI에게 지시하고 결과를 확인하는 연습을 할 곳이 없습니다.</p>
+      <div class="stats">
+        <div class="stat"><b>72%</b><span>초등 4~6학년 생성형 AI 사용</span><small>전교조 2026 어린이 생활과 생각 조사</small></div>
+        <div class="stat"><b>21.2%</b><span>헷갈리는 정보를 스스로 확인하는 아이</span><small>같은 조사(초4~6 2,804명)</small></div>
+        <div class="stat"><b>88.6%</b><span>학교 AI 교육이 필요하다는 학부모</span><small>한국컴퓨터교육학회 설문(2026)</small></div>
+        <div class="stat"><b>2배</b><span>초등 5·6학년 정보 수업 17→34시간</span><small>교육부 2022 개정 교육과정(2026~)</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 수업 -->
+  <section id="lessons">
+    <div class="wrap">
+      <span class="kicker">수업</span>
+      <h2>놀이처럼 보이지만, 매 순간이 AI를 다루는 연습입니다</h2>
+      <p class="sub">수업마다 아이가 AI에게 말로 시키고, 뭉게가 알아들은 내용을 확인하고, 결과를 목표와 비교해 고칩니다.</p>
+      <div class="lessons">
+        <article class="lesson">
+          <img src="assets/match-goal.webp" alt="똑같이 만들어 줘: 아이만 보는 목표 그림" loading="lazy" width="1280" height="889">
+          <div class="body">
+            <span class="tag t-purple">표현력 · 분명하게 주문하기</span>
+            <h3>똑같이 만들어 줘</h3>
+            <p>목표 그림은 아이만 봅니다. 뭉게는 아이가 말한 것만 그리고, 빠진 조건은 "조금 더 자세히 말해 줄래?"로 되묻습니다.</p>
+            <ul class="steps"><li>목표 그림 보기</li><li>말로 시키기</li><li>들은 낱말 확인</li><li>비교하고 고치기</li></ul>
+          </div>
+        </article>
+        <article class="lesson">
+          <img src="assets/diary.webp" alt="그림일기: 아이가 말로 쓴 하루가 그림과 글이 됩니다" loading="lazy" width="1280" height="889">
+          <div class="body">
+            <span class="tag t-pink">창의력 · 새롭게 생각하기</span>
+            <h3>그림일기</h3>
+            <p>그날 있었던 일은 아이만 압니다. 아이가 말로 쓴 하루를 뭉게가 그림으로 옮기고, 아이는 그림을 보고 바꿀 곳을 말합니다.</p>
+            <ul class="steps"><li>하루 말하기</li><li>그림 확인</li><li>바꿀 곳 말하기</li><li>종이에 따라 쓰기</li></ul>
+          </div>
+        </article>
+        <article class="lesson">
+          <img src="assets/game-heard.webp" alt="게임 규칙 만들기: 뭉게가 아이가 정한 규칙을 카드로 보여 줍니다" loading="lazy" width="1280" height="889">
+          <div class="body">
+            <span class="tag t-green">설계력 · 차례대로 설계하기</span>
+            <h3>게임 규칙 만들기</h3>
+            <p>누가, 어디서, 무엇을 모으고 피할지 아이가 말로 정하면 그 규칙대로 게임이 만들어집니다. 해 보고, 예측하고, 규칙을 바꿉니다.</p>
+            <ul class="steps"><li>규칙 말하기</li><li>예측하기</li><li>해 보기</li><li>규칙 바꾸기</li></ul>
+          </div>
+        </article>
+      </div>
+      <div class="skills">
+        <div class="skill" style="background:var(--lav)"><b>표현력</b><span>원하는 것을 빠짐없이 말하기</span></div>
+        <div class="skill" style="background:var(--sun)"><b>사고력</b><span>AI 결과에서 틀린 곳 찾기</span></div>
+        <div class="skill" style="background:var(--mint)"><b>설계력</b><span>조건과 순서로 규칙 만들기</span></div>
+        <div class="skill" style="background:var(--rose)"><b>창의력</b><span>내 생각을 먼저 정하고 표현하기</span></div>
+      </div>
+      <p class="sub" style="margin-top:14px">네 가지 역량을 L1~L4 단계로 나누고, 같은 행동에는 같은 판정을 내리는 규칙으로 기록합니다. OECD·EU AI 리터러시 기준(2026)과 초등 1~2학년 국어 말하기·그림일기 활동을 참고해 설계했습니다.</p>
+    </div>
+  </section>
+
+  <!-- 흐름·리포트 -->
+  <section id="report" style="background:#fff">
+    <div class="wrap split">
+      <div>
+        <span class="kicker">하루 15분</span>
+        <h2>오늘의 수업 세 개, 그리고 보호자 리포트</h2>
+        <ol class="flow">
+          <li><i>1</i>오늘의 수업 고르기 — 약한 역량을 먼저 배치</li>
+          <li><i>2</i>말로 시키기</li>
+          <li><i>3</i>뭉게가 알아들은 낱말 카드로 확인</li>
+          <li><i>4</i>목표와 비교해 고치기</li>
+          <li><i>5</i>보호자 리포트에 그날의 말이 쌓임</li>
+        </ol>
+        <div class="quote">
+          <div class="row"><em>처음 한 말</em><div><q>토끼야</q><small>조건 1개 · 누구</small></div></div>
+          <div class="row"><em>3주 뒤 한 말</em><div><q>갈색 곰이 보라색 망토를 입고 아이스크림 두 개를 들고 우주에 있어</q><small>조건 4개 · 누구·무엇·몇 개·어디 (시연용 예시 기록)</small></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="device"><img src="assets/lesson-today.webp" alt="오늘의 수업 화면: 그림일기, 똑같이 만들어 줘, 게임 규칙 만들기" loading="lazy" width="1280" height="889"></div>
+        <div class="device" style="margin-top:20px"><img src="assets/profile.webp" alt="보호자 학습 프로필: 처음 한 말과 지금 한 말을 나란히 보여 줍니다" loading="lazy" width="1280" height="889"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 안전 -->
+  <section id="safety">
+    <div class="wrap">
+      <span class="kicker">안전</span>
+      <h2>아이 곁의 AI는, 정해 둔 규칙 안에서만 움직입니다</h2>
+      <p class="sub">AI는 알아듣고 그리는 일만 맡고, 안전 검사와 단계 판정은 정해 둔 규칙이 맡습니다.</p>
+      <div class="safety">
+        <div class="safe"><div class="dot">1</div><h3>열린 채팅 없음</h3><p>아이는 수업 단계 안에서만 뭉게와 이야기합니다. 친구·상담 역할은 하지 않습니다.</p></div>
+        <div class="safe"><div class="dot">2</div><h3>개인정보 먼저 가림</h3><p>이름·유치원 같은 말은 AI로 보내기 전에 먼저 가립니다.</p></div>
+        <div class="safe"><div class="dot">3</div><h3>음성 원본 즉시 삭제</h3><p>아이 목소리는 글로 바꾼 뒤 바로 지웁니다.</p></div>
+        <div class="safe"><div class="dot">4</div><h3>보호자 동의 후 시작</h3><p>만 14세 미만 법정대리인 동의를 받고, 아이 계정 없이 보호자가 관리합니다.</p></div>
+        <div class="safe"><div class="dot">5</div><h3>모든 대화를 보호자가 열람</h3><p>만드는 화면마다 AI 표시가 있고, 대화 기록은 보호자 화면에서 볼 수 있습니다.</p></div>
+        <div class="safe"><div class="dot">6</div><h3>안전 시험 · 이용 시간 상한</h3><p>막아야 할 문장 92개 중 누출 0건(329문장 시험, 2026.10). 1회 15분, 하루 이용 시간은 보호자가 정합니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 시연 영상 -->
+  <section id="demo" style="background:#fff">
+    <div class="wrap">
+      <span class="kicker">시연 영상</span>
+      <h2>실제로 작동하는 화면입니다</h2>
+      <p class="sub">태블릿에서 녹화한 실제 수업 화면입니다. 아이 이름과 기록은 시연용 예시입니다.</p>
+      <div class="videos">
+        <div class="video"><video controls preload="none" playsinline poster="assets/match-poster.jpg"><source src="assets/match.mp4" type="video/mp4"></video><div class="cap"><b>똑같이 만들어 줘</b><span>말한 대로만 그리고, 빠진 것을 되묻습니다 · 46초</span></div></div>
+        <div class="video"><video controls preload="none" playsinline poster="assets/today-poster.jpg"><source src="assets/today.mp4" type="video/mp4"></video><div class="cap"><b>오늘의 수업</b><span>하루 세 수업 · 14초</span></div></div>
+        <div class="video"><video controls preload="none" playsinline poster="assets/diary-poster.jpg"><source src="assets/diary.mp4" type="video/mp4"></video><div class="cap"><b>그림일기</b><span>말로 쓴 하루를 그림으로 · 39초</span></div></div>
+        <div class="video"><video controls preload="none" playsinline poster="assets/profile-poster.jpg"><source src="assets/profile.mp4" type="video/mp4"></video><div class="cap"><b>보호자 학습 프로필</b><span>처음 한 말 → 지금 한 말 · 11초</span></div></div>
+        <div class="video"><video controls preload="none" playsinline poster="assets/game-poster.jpg"><source src="assets/game.mp4" type="video/mp4"></video><div class="cap"><b>게임 한 판</b><span>말로 정한 규칙으로 놀기 · 77초</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 팀 -->
+  <section id="team">
+    <div class="wrap">
+      <span class="kicker">팀</span>
+      <h2>AI를 전공한 두 창업자가 만듭니다</h2>
+      <div class="team">
+        <div class="person"><h3>신승민<span class="role">대표</span></h3><p>사업 운영·마케팅 · 가천대 인공지능학과</p></div>
+        <div class="person"><h3>김범수<span class="role">CTO</span></h3><p>제품 개발·안전 장치·원가 측정 · 가천대 인공지능학과</p></div>
+        <div class="person"><h3>송채우<span class="role">협력</span></h3><p>유아교육학 · 수업 설계와 아이 말투 검수</p></div>
+      </div>
+      <div class="backing">
+        <div>
+          <h3>함께하는 곳</h3>
+          <ul>
+            <li>가천대 스타트업칼리지 8기 — 사무 공간·교수진·자문위원 지원</li>
+            <li>전담 교수 김남주 (전 카카오브레인 CTO) — 기술·플랫폼 자문</li>
+            <li>장대익 학장 (서울대 인류학 박사) — 아이와 AI의 관계 학술 자문</li>
+          </ul>
+        </div>
+        <div class="award"><b>최우수상</b>2026 DMC 이노베이션 캠프 창업경진대회<br><small style="color:var(--muted)">171팀 지원 · 본선 10팀</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 베타 -->
+  <section id="beta" style="padding-top:0">
+    <div class="wrap">
+      <div class="beta">
+        <div>
+          <h2>첫 베타 가정을 모십니다</h2>
+          <p>7세 자녀를 둔 30가정과 4주 동안 함께합니다. 아이가 혼자 해낼 수 있는지, 다시 찾아오는지, 무엇을 고쳐야 하는지 부모님과 함께 확인합니다.</p>
+          <ul>
+            <li>기간: 11월 22일부터 4주 · 무료</li>
+            <li>대상: 초등 입학을 앞둔 7세 자녀</li>
+            <li>준비물: 집에 있는 태블릿이나 휴대폰 (설치 없음)</li>
+            <li>보호자 동의 후 시작 · 언제든 그만둘 수 있음</li>
+          </ul>
+        </div>
+        <div class="side">
+          <img src="assets/mungge_listening.webp" alt="" width="640" height="640">
+          <a class="btn primary beta-link" id="beta-btn" href="#beta">베타 신청하기</a>
+          <small id="beta-note">신청서는 보호자만 작성해 주세요</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>상상놀이터 · 팀 순간 · 가천대 스타트업칼리지 8기</div>
+    <div>뭉게는 AI예요. 대화 내용은 보호자가 볼 수 있어요. © 2026</div>
+  </div>
+</footer>
+
+<script>
+  // 베타 신청서 주소. 비어 있으면 버튼을 '준비 중'으로 둔다.
+  const BETA_URL = "";
+  document.querySelectorAll(".beta-link").forEach((a) => {
+    if (!BETA_URL) return;
+    a.href = BETA_URL;
+    a.target = "_blank";
+    a.rel = "noopener";
+  });
+  if (!BETA_URL) {
+    const b = document.getElementById("beta-btn");
+    b.textContent = "신청 링크 준비 중";
+    b.setAttribute("aria-disabled", "true");
+    document.getElementById("beta-note").textContent = "곧 신청을 받습니다";
+  }
+</script>
+</body>
+</html>
